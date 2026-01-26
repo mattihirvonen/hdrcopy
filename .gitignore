@@ -1,0 +1,7 @@
+bin
+obj
+*.layout
+CppCheckResults.xml
+hdrcopy
+libhdr
+ZIP
