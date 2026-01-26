@@ -31,4 +31,7 @@ Used CodeBlocks package should contain MinGW compiler installation.
 Linux build will do using standard command line command (make utility and G++ compiler)
 - make linux
 
+## ToDO:
+- Fix duplicate file handling
+
 
