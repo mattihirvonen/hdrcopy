@@ -20,6 +20,7 @@ for traditinal unix/linux oriented tool.
 ## Application Usage
 Application dryrun command (no real copy)
 - **hdrcopy  source_directory_tree  destination directory**
+
 Application real copy execution
 - **hdrcopy  source_directory_tree  destination directory  -x**
 
@@ -27,7 +28,7 @@ Application real copy execution
 Windows environment build will do with CoDeBlocks (.cbp project file).
 Used CodeBlocks package should contain MinGW compiler installation.
 
-Linux build will do usin standard command line command (make utility and G++ compiler)
+Linux build will do using standard command line command (make utility and G++ compiler)
 - make linux
 
 
