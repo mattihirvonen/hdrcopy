@@ -40,16 +40,20 @@ clean:
 
 
 lnxCopy:
-	./hdrcopy   $(LIBRARIES_USER)     libhdr-user     -x
-	./hdrcopy   $(LIBRARIES_IDE)      libhdr-ide      -x
-	./hdrcopy   $(LIBRARIES_CORE)     libhdr-core     -x
-	./hdrcopy   $(LIBRARIES_STAGING)  libhdr-staging  -x
+	./hdrcopy -vx  -d $(LIBRARIES_USER)     libhdr-user
+	./hdrcopy -vx  -d $ LIBRARIES_IDE)      libhdr-ide
+	./hdrcopy -vx  -d $(LIBRARIES_CORE)     libhdr-core
+	./hdrcopy -vx  -d $(LIBRARIES_STAGING)  libhdr-staging
+
+# Test single line copy to one common directory
+singleCopy:
+	./hdrcopy -v  -d libhdr-common  $(LIBRARIES_USER)  $(LIBRARIES_IDE)  $(LIBRARIES_CORE)  $(LIBRARIES_STAGING)
 
 #----------------------------------------
 # Windows
 
 hdrcopy.exe: Makefile hdrcopy.cpp
-	g++  -DWINDOWS    hdrcopy.cpp -o hdrcopy.exe
+	g++  -DWINDOWS  hdrcopy.cpp -o hdrcopy.exe
 
 
 winClean:

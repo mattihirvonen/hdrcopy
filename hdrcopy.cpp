@@ -5,15 +5,12 @@
 #include <ftw.h>
 #include <libgen.h>
 #include <sys/stat.h>
+#include <unistd.h>        // getopt()
 
-#define MAX_FILES  100000  // Real data amount is small so we can use fixed size table
+#define MAX_FILES  10000   // Real data amount is small so we can use fixed size table
 #define LEN_FNAME  128
 #define LEN_NAME   64
-
-
-typedef struct {
-    int dryrun;
-} conf_t;
+#define SRC_DIRS   8
 
 
 typedef struct
@@ -31,13 +28,24 @@ typedef struct
 } dbase_t;
 
 
-conf_t conf =
-{
-    .dryrun = 1
-};
+typedef struct {
+    int  dryrun;
+    int  verbose;
+    int  csource;
+    int  src_dirs;
+    char src_dir[SRC_DIRS][LEN_FNAME];
+    char dest_dir[LEN_FNAME];
+} conf_t;
 
-const char  *dest_dir;
-dbase_t      dbase;
+
+dbase_t dbase;
+conf_t  conf =
+{
+    .dryrun    = 1,
+    .verbose   = 0,
+    .csource   = 0,
+    .src_dirs  = 0
+};
 
 //-------------------------------------------------------------------------
 
@@ -97,12 +105,25 @@ int process_file(const char *fpath, const struct stat *sb, int tflag, struct FTW
     // Only process regular files
     if (tflag == FTW_F) {
         const char *ext = strrchr(fpath, '.');
-        if (ext && (strcmp(ext, ".h") == 0 || strcmp(ext, ".hpp") == 0)) {
+        if ( conf.csource ) {
+            if ( ! (ext && (strcmp(ext, ".h") == 0 || strcmp(ext, ".hpp") == 0 || strcmp(ext, ".c") == 0 || strcmp(ext, ".cpp") == 0)) ) {
+                return 0;
+            }
+        }
+        else {
+            if ( ! (ext && (strcmp(ext, ".h") == 0 || strcmp(ext, ".hpp") == 0)) ) {
+                return 0;
+            }
+        }
+        //if (ext && (strcmp(ext, ".h") == 0 || strcmp(ext, ".hpp") == 0))
+        {
             char target_path[1024];
             char *filename = basename((char *)fpath);
-            snprintf(target_path, sizeof(target_path), "%s/%s", dest_dir, filename);
+            snprintf(target_path, sizeof(target_path), "%s/%s", conf.dest_dir, filename);
 
-            printf("Copying: %s -> %s\n", fpath, target_path);
+            if ( conf.verbose ) {
+                printf("Copying: %s -> %s\n", fpath, target_path);
+            }
 
             db_add_record( fpath, filename );
 
@@ -115,35 +136,111 @@ int process_file(const char *fpath, const struct stat *sb, int tflag, struct FTW
 }
 
 
-int main(int argc, char *argv[])
+void help( char *argv0 )
 {
-    if (argc < 3) {
-        fprintf(stderr, "Usage: %s <source_dir> <dest_dir> [-x]\n", argv[0]);
-        return 1;
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Usage: %s [-v] [-x] [-c] -d dstDir  srcDir1  srcDir2  ...\n", argv0);
+    exit(EXIT_FAILURE);
+}
+
+
+int parse_arguments( int argc, char *argv[] )
+{
+    char options[] = "?hxvcd:s:";
+    int  opt;
+
+    while ((opt = getopt(argc, argv, options)) != -1)
+    {
+        switch (opt)
+        {
+            case '?':
+                help( argv[0] );
+                break;
+            case 'h':
+                help( argv[0] );
+                break;
+            case 'x':
+                conf.dryrun   = 0;
+                break;
+            case 'v':
+                conf.verbose += 1;
+                break;
+            case 'c':
+                conf.csource  = 1;
+                break;
+            case 'd':
+                strncpy( conf.dest_dir, optarg, LEN_FNAME );
+                break;
+            case 's':
+                if ( conf.src_dirs < SRC_DIRS ) {
+                    strncpy( conf.src_dir[conf.src_dirs++], optarg, LEN_FNAME );
+                }
+                break;
+
+            /// ToDo: Fix me....
+            default: /* '?' */
+                if ( conf.src_dirs < SRC_DIRS ) {
+                    strncpy( conf.src_dir[conf.src_dirs++], argv[optind], LEN_FNAME );
+                }
+                break;
+        }
     }
-    if (argc > 3) {
-        conf.dryrun = 0;
+    if (optind >= argc) {
+       fprintf(stderr, "Expected argument after options\n");
+       exit(EXIT_FAILURE);
     }
+    if ( !strlen(conf.dest_dir) ) {
+        printf("ERROR: missing destination directory\n");
+        exit(EXIT_FAILURE);
+    }
+    // Parse rest of source directory arguments from command line tail
+    for ( int i = optind; i < argc; i++ ) {
+        if ( conf.src_dirs  < SRC_DIRS  ) {
+            strncpy( conf.src_dir[conf.src_dirs++], argv[i], LEN_FNAME );
+        }
+    }
+    if ( !conf.src_dirs ) {
+        printf("ERROR: missing source directory\n");
+        exit(EXIT_FAILURE);
+    }
+    //  "Debug stuff"
+    if ( conf.verbose > 1 ) {
+        printf("destination argument  = %s\n", conf.dest_dir);
+        for ( int ix = 0; ix < conf.src_dirs; ix++ ) {
+            printf("source argument (i=%d) = %s\n", ix, conf.src_dir[ix]);
+        }
+    }
+    return 0;
+}
+
+
+int main( int argc, char *argv[] )
+{
+    int parsed = parse_arguments( argc, argv );
 
     const char *src_dir = argv[1];
-    dest_dir = argv[2];
+    //dest_dir = argv[2];
 
     // Create destination directory if it doesn't exist
     #ifdef LINUX
-    mkdir(dest_dir, 0755);
+    mkdir(conf.dest_dir, 0755);
     #else
-    mkdir(dest_dir);
+    mkdir(conf.dest_dir);
     #endif // LINUX
 
-    // nftw(path, callback, max_open_fds, flags)
-    if (nftw(src_dir, process_file, 20, FTW_PHYS) == -1) {
-        perror("nftw");
-        return 1;
+    for ( int i = 0; i < conf.src_dirs; i++ ) {
+        // nftw(path, callback, max_open_fds, flags)
+        if (nftw(conf.src_dir[i], process_file, 20, FTW_PHYS) == -1) {
+            perror("nftw");
+            return 1;
+        }
     }
 
-    printf("\n----------------------------------------------\n");
-    printf("Files processed: %d\n", dbase.records);
-    printf("Duplicates:      %d\n", db_mark_duplicates() );
+    if ( conf.verbose ) {
+        printf("\n----------------------------------------------\n");
+        printf("Files processed: %d\n", dbase.records);
+        printf("Duplicates:      %d\n", db_mark_duplicates() );
+    }
     printf("Done.\n");
     return 0;
 }
