@@ -25,16 +25,16 @@ Application real copy execution
 - **hdrcopy -x -d destinationDirectory sourceDirectoryTree**
 
 ## Application Build
-Application's Windows environment build will do with CodeBlocks (.cbp project file).
-Used CodeBlocks package should contain MinGW compiler installation.
+Application's Windows environment build has tested with CodeBlocks 25.03 (.cbp project file)
+with bundled MinGW compiler package.
 - Select from menu: **Build / Select target / winDebug**
 
-Linux build will do using standard command line command (make utility and G++ compiler)
-Application's Linux environment build can do with two ways
+Application's Linux build can do using standard command line command (make utility and G++ compiler).
+Linux environment build can do also with CodeBlocks (windows installation)
 - using CodeBlocks (.cbp project file) select from menu: **Build / Select target / lnxDebug**
 - using ordinary Linux command line tools, use command: **make**
 
 ## ToDO:
 - Fix duplicate file handling
-- Add command line option "-c" copy also libraries C/C++ source code files for analyze
-- Add command line parsing to accept multiple source directories from command line
+- Add command line option "-c" copy also libraries C/C++ source code files for analyze (done)
+- Add command line parsing to accept multiple source directories from command line (done)
