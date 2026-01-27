@@ -19,10 +19,10 @@ for traditinal unix/linux oriented tool.
 
 ## Application Usage
 Application dryrun command (no real copy)
-- **hdrcopy  sourceDirectoryTree  destinationDirectory**
+- **hdrcopy -v -d destinationDirectory sourceDirectoryTree**
 
 Application real copy execution
-- **hdrcopy  sourceDirectoryTree  destinationDirectory  -x**
+- **hdrcopy -x -d destinationDirectory sourceDirectoryTree**
 
 ## Application Build
 Application's Windows environment build will do with CodeBlocks (.cbp project file).
