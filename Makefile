@@ -41,13 +41,13 @@ clean:
 
 lnxCopy:
 	./hdrcopy -vx  -d $(LIBRARIES_USER)     libhdr-user
-	./hdrcopy -vx  -d $ LIBRARIES_IDE)      libhdr-ide
+	./hdrcopy -vx  -d $(LIBRARIES_IDE)      libhdr-ide
 	./hdrcopy -vx  -d $(LIBRARIES_CORE)     libhdr-core
 	./hdrcopy -vx  -d $(LIBRARIES_STAGING)  libhdr-staging
 
 # Test single line copy to one common directory
 singleCopy:
-	./hdrcopy -v  -d libhdr-common  $(LIBRARIES_USER)  $(LIBRARIES_IDE)  $(LIBRARIES_CORE)  $(LIBRARIES_STAGING)
+	./hdrcopy -vcx -d libhdr-arduino  $(LIBRARIES_STAGING)  $(LIBRARIES_CORE)  $(LIBRARIES_IDE)
 
 #----------------------------------------
 # Windows
