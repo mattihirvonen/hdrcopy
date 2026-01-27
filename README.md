@@ -19,10 +19,10 @@ for traditinal unix/linux oriented tool.
 
 ## Application Usage
 Application dryrun command (no real copy)
-- **hdrcopy  source_directory_tree  destination directory**
+- **hdrcopy  sourceDirectoryTree  destinationDirectory**
 
 Application real copy execution
-- **hdrcopy  source_directory_tree  destination directory  -x**
+- **hdrcopy  sourceDirectoryTree  destinationDirectory  -x**
 
 ## Application Build
 Application's Windows environment build will do with CodeBlocks (.cbp project file).
@@ -36,5 +36,5 @@ Application's Linux environment build can do with two ways
 
 ## ToDO:
 - Fix duplicate file handling
-
-
+- Add command line option "-c" copy also libraries C/C++ source code files for analyze
+- Add command line parsing to accept multiple source directories from command line
