@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     dest_dir = argv[2];
 
     // Create destination directory if it doesn't exist
-    #if LINUX
+    #ifdef LINUX
     mkdir(dest_dir, 0755);
     #else
     mkdir(dest_dir);

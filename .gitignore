@@ -1,7 +1,8 @@
 bin
 obj
 *.layout
-CppCheckResults.xml
 hdrcopy
-libhdr
+hdrcopy.exe
+libhdr-*
 ZIP
+CppCheckResults.xml

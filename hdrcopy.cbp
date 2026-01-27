@@ -7,7 +7,7 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
+			<Target title="lnxDebug">
 				<Option output="bin/Debug/Arduino Library Header File Collect" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
@@ -16,7 +16,7 @@
 					<Add option="-g" />
 				</Compiler>
 			</Target>
-			<Target title="Release">
+			<Target title="lnxRelease">
 				<Option output="bin/Release/Arduino Library Header File Collect" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
@@ -28,13 +28,66 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="lnxCopy">
+				<Option output="hdrcopy-loki" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+			</Target>
+			<Target title="winDebug">
+				<Option output="bin/Debug/Arduino Library Header File Collect" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="winRelease">
+				<Option output="bin/Release/Arduino Library Header File Collect" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="winCopy">
+				<Option output="hdrcopy-loki" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Makefile" />
-		<Unit filename="hdrcopy.cpp" />
+		<Unit filename=".gitignore">
+			<Option target="lnxDebug" />
+			<Option target="lnxRelease" />
+			<Option target="winDebug" />
+			<Option target="winRelease" />
+		</Unit>
+		<Unit filename="Makefile">
+			<Option target="lnxDebug" />
+			<Option target="lnxRelease" />
+			<Option target="winDebug" />
+			<Option target="winRelease" />
+		</Unit>
+		<Unit filename="README.md">
+			<Option target="lnxDebug" />
+			<Option target="lnxRelease" />
+			<Option target="winDebug" />
+			<Option target="winRelease" />
+		</Unit>
+		<Unit filename="hdrcopy.cpp">
+			<Option target="lnxDebug" />
+			<Option target="lnxRelease" />
+			<Option target="winDebug" />
+			<Option target="winRelease" />
+		</Unit>
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
