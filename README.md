@@ -8,11 +8,11 @@ Arduino IDE libraries directory/file structure differs from traditional.
 Following firectory structure is difficult to give as reference tree
 for traditinal unix/linux oriented tool.
 ```
-.../libraries/ ---+--- libbrary1/ --- src/ ---+--- *.cpp
-                  |                           +--- *.h
+.../libraries/ ---+--- library1/ --- src/ ---+--- *.cpp
+                  |                          +--- *.h
                   |
-                  +--- libbrary2/ --- src/ ---+--- *.cpp
-                  |                           +--- *.h
+                  +--- library2/ --- src/ ---+--- *.cpp
+                  |                          +--- *.h
                   |
                   +--- library3/ ...
 ```
