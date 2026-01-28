@@ -6,6 +6,7 @@
 #include <libgen.h>
 #include <sys/stat.h>
 #include <unistd.h>        // getopt()
+#include <ctype.h>
 
 #define MAX_FILES  10000   // Real data amount is small so we can use fixed size table
 #define LEN_FNAME  128
@@ -49,6 +50,22 @@ conf_t  conf =
 
 //-------------------------------------------------------------------------
 
+int strcmp_ignore_case(const char *s1, const char *s2)
+{
+    while (*s1 && *s2) {
+        int diff = tolower((unsigned char)*s1) - tolower((unsigned char)*s2);
+        if (diff != 0) {
+            return diff;
+        }
+        s1++;
+        s2++;
+    }
+    return tolower((unsigned char)*s1) - tolower((unsigned char)*s2);
+}
+
+
+//-------------------------------------------------------------------------
+
 int db_add_record( const char *fpath, const char *name )
 {
     if ( dbase.records >= MAX_FILES ) {
@@ -68,7 +85,9 @@ int db_mark_duplicates( void )
 
     for ( int i = 0; i < (dbase.records - 2); i++ ) {
         for ( int j = (i + 1); j < (dbase.records - 1); j++ ) {
-            if ( strncmp( dbase.file[i].name, dbase.file[i].name, LEN_NAME ) ) {
+        //  if ( strncmp( dbase.file[i].name, dbase.file[i].name, LEN_NAME  ) ) {
+        //  Windows is case insensitive
+            if ( strcmp_ignore_case( dbase.file[i].name, dbase.file[i].name ) ) {
                 continue;
             }
             dbase.file[i].duplicate = 1;
