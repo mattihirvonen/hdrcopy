@@ -117,8 +117,9 @@ int process_file(const char *fpath, const struct stat *sb, int tflag, struct FTW
         }
         //if (ext && (strcmp(ext, ".h") == 0 || strcmp(ext, ".hpp") == 0))
         {
-            char target_path[1024];
-            char *filename = basename((char *)fpath);
+            char const *filename = basename( const_cast<char*>(fpath) );
+            char        target_path[1024];
+
             snprintf(target_path, sizeof(target_path), "%s/%s", conf.dest_dir, filename);
 
             if ( conf.verbose ) {
@@ -136,7 +137,7 @@ int process_file(const char *fpath, const struct stat *sb, int tflag, struct FTW
 }
 
 
-void help( char *argv0 )
+void help( const char *argv0 )
 {
     fprintf(stderr, "\n");
     fprintf(stderr, "Usage: %s [-v] [-x] [-c] -d dstDir  srcDir1  srcDir2  ...\n", argv0);
@@ -210,16 +211,13 @@ int parse_arguments( int argc, char *argv[] )
             printf("source argument (i=%d) = %s\n", ix, conf.src_dir[ix]);
         }
     }
-    return 0;
+    return optind + 1;  // Return count of parsed command line arguments
 }
 
 
 int main( int argc, char *argv[] )
 {
-    int parsed = parse_arguments( argc, argv );
-
-    const char *src_dir = argv[1];
-    //dest_dir = argv[2];
+    parse_arguments( argc, argv );
 
     // Create destination directory if it doesn't exist
     #ifdef LINUX
