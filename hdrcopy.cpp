@@ -239,11 +239,11 @@ int main( int argc, char *argv[] )
     parse_arguments( argc, argv );
 
     // Create destination directory if it doesn't exist
-    #ifdef LINUX
+    #ifdef  __linux__
     mkdir(conf.dest_dir, 0755);
-    #else
+    #else  // Windows
     mkdir(conf.dest_dir);
-    #endif // LINUX
+    #endif // __linux__
 
     for ( int i = 0; i < conf.src_dirs; i++ ) {
         // nftw(path, callback, max_open_fds, flags)
