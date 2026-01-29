@@ -70,6 +70,7 @@
 			<Option target="winDebug" />
 			<Option target="winRelease" />
 		</Unit>
+		<Unit filename="CppCheckResults.xml" />
 		<Unit filename="Makefile">
 			<Option target="lnxDebug" />
 			<Option target="lnxRelease" />
