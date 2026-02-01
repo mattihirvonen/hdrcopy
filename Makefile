@@ -1,3 +1,6 @@
+#-------------------------------------------------------------------
+
+# This Makefile is ESP32 development oriented !!!
 
 #-------------------------------------------------------------------
 # Windows
@@ -11,7 +14,7 @@ USER   := mattihirvonen
 
 PLATFORMIO_LIBRARY_VERSION      := 3.3.5
 ARDUINO_LIBRARY_VERSION_LINUX   := 3.3.5
-ARDUINO_LIBRARY_VERSION_WINDOWS := 3.3.6
+ARDUINO_LIBRARY_VERSION_WINDOWS := 3.3.5
 
 
 # Windows Arduino "standard" libraries (PlatformIO, Windows)
@@ -20,7 +23,7 @@ ARDUINO_LIBRARY_VERSION_WINDOWS := 3.3.6
 LIBS_PLATFORMIO := /Users/$(USER)/.platformio/packages/framework-arduinoespressif32/libraries
 
 
-# Linux Arduino IDE "libraries" paths (single file Application package executable)
+# Linux Arduino IDE "libraries" paths (single file executable AppImage)
 #
 LIBRARIES_USER     := ~/Arduino/libraries
 LIBRARIES_STD      := ~/.arduino15/packages/esp32/hardware/esp32/$(ARDUINO_LIBRARY_VERSION_LINUX)/libraries
@@ -41,9 +44,9 @@ LIBRARIES_STAGING  := ~/.arduino15/libraries
 #    downloads:     C:\Users\$(USER)\AppData\Local\Arduino15\staging
 #    user:          c:\Users\$(USER)\Documents\Arduino
 
-LIBS_USER_ARDUINO := C:\Users\$(USER)\Documents\Arduino\libraries
-LIBS_STD_ARDUINO  := C:\Users\$(USER)\Appdata\Arduino15\Local\packages\esp32\hardware\esp32\$(ARDUINO_LIBRARY_VERSION_WINDOWS)\libraries
-LIBS_CORE_ARDUINO := C:\Users\$(USER)\Appdata\Arduino15\Local\libraries
+LIBS_USER_ARDUINO := \Users\$(USER)\Documents\Arduino\libraries
+LIBS_STD_ARDUINO  := \Users\$(USER)\Appdata\Local\Arduino15\packages\esp32\hardware\esp32\$(ARDUINO_LIBRARY_VERSION_WINDOWS)\libraries
+LIBS_CORE_ARDUINO := \Users\$(USER)\AppData\Local\Arduino15\libraries
 
 #-------------------------------------------------------------------
 
@@ -101,6 +104,9 @@ winClean:
 
 # ToDo....
 winCopy:
-	./hdrcopy.exe   $(LIBS_PLATFORMIO)  libhdr-win  -x
-#	./hdrcopy       $(CORE_LIBRARIES)   libhdr      -x
-#	./hdrcopy       $(USER_LIBRARIES)   libhdr      -x
+#	hdrcopy.exe -vcx -d libhdr-win-platformio  $(LIBS_PLATFORMIO)
+	hdrcopy.exe -vcx -d libhdr-win-arduino     $(LIBS_CORE_ARDUINO)  $(LIBS_STD_ARDUINO)
+	hdrcopy.exe -vcx -d libhdr-win-arduino     $(LIBS_USER_ARDUINO)
+
+# Tested command:
+# x:hdrcopy.exe -vcx -d libhdr-win-arduino  \Users\User\AppData\Local\Arduino15\libraries  \Users\user\Appdata\Local\Arduino15\packages\esp32\hardware\esp32\3.3.6\libraries  \Users\user\Documents\Arduino\libraries
